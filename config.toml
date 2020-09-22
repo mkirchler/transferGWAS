@@ -1,0 +1,57 @@
+# lmm model; options are:
+#   "lmmInfOnly" (only inf-model)
+#   "lmmForceNonInf" (run both)
+#   "lmm" (inf always, non-inf only if expected to have higher power)
+model = "lmmInfOnly"
+
+# path to embedding file (output of `export_embeddings.py`)
+# space-separated, first two columns should be `FID` and `IID`, then `PC_0`, `PC_1`, ...
+phenoFile = "path/to/condensed/embeddings.txt"
+
+# path to covariate file
+# space-sperataed, first two columns should be `FID` and `IID`, then the covariates
+covarFile = "path/to/covariates.txt"
+
+# list of categorical covariates to adjust for, as in `covarFile`
+covColumns = [ "sex", "assessment_center", "geno_batch" ]
+# list of quantitative covariates to adjust for, as in `covarFile`
+qCovColumns = [ "age", "genet_PC_{1:10}" ]
+
+# run BOLT-LMM on all PCs with firstPC <= PC <= lastPC
+firstPC = 0
+lastPC = 0
+
+# where to save the results
+outputDirectory = "results"
+
+# keep empty to automatically download into new directory "BOLT-LMM_v2.3.4"
+boltDirectory = ""
+# adjust if using different location,  different map or individuals with different ancestry
+geneticMapFile = "BOLT-LMM_v2.3.4/tables/genetic_map_hg19_withX.txt.gz"
+LDscoresFile = "BOLT-LMM_v2.3.4/tables/LDSCORE.1000G_EUR.tab.gz"
+
+# file or list of files with IID to remove from analysis
+remove = ""
+
+# bed files; multiple files for different chromosomes can be specified as indicated
+bed = "path/to/bed/chr{1:22}.bed"
+bim = "path/to/bed/chr{1:22}.bim"
+# note that only a single .fam file is permitted
+fam = "path/to/bed/chr1.fam"
+
+# filter missing values
+maxMissingPerSnp = 0.1
+maxMissingPerIndiv = 0.1
+
+# number of threads to use; using more than cores available will slow down processing
+numThreads = 30
+
+runImputed = false
+# bgen & sample files
+# multiple files for different chromosomes can be specified as indicated
+# bgen & sample get ignored if `runImputed = false`
+bgenFile = "path/to/bgen/chr{1:22}.bgen"
+sampleFile = "path/to/bgen/chr{1:22}.sample"
+# filtering of imputed data by MAF and imputation quality
+bgenMinMAF = 0.001
+bgenMinINFO = 0.4
