@@ -1,6 +1,6 @@
-# GWAS analysis with BOLT-LMM
+# transferGWAS analysis with BOLT-LMM
 
-This is a simple wrapper for basic genetic preprocessing and running BOLT-LMM. You can ignore it and directly use BOLT-LMM (or any other GWAS software) with the phenotypes condensed in TODO. If you don't specify a path to your plink2 and BOLT-LMM installations, the script will download them on its own.
+This is a simple wrapper for basic preprocessing and running BOLT-LMM. You can ignore it and directly use BOLT-LMM (or any other GWAS software) with the phenotypes condensed in TODO. If you don't specify a path to your BOLT-LMM installations, the script will download it on its own.
 
 ## Genetic preprocessing
 
