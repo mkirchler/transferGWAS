@@ -1,8 +1,9 @@
 #!/usr/bin/python
+import sys
 import os
 from os.path import join
 import argparse
-from subprocess import Popen, PIPE
+from subprocess import Popen, PIPE, STDOUT
 import requests
 import tarfile
 
@@ -144,12 +145,11 @@ def main():
     for pc in pcs:
         configs['phenoCol'] = f'PC_{pc}'
         configs['statsFile'] = join(out, f'PC_{pc}.txt')
-        # TODO tee
-        # log_file = join(out, 'log', f'PC_{pc}.log')
+        log_file = join(out, 'log', f'PC_{pc}.log')
         if run_imputed:
             configs['statsFileBgenSnps'] = join(out, f'PC_{pc}_imputed.txt')
 
-        run_single_bolt(bolt, flags, covars, qcovars, remove, **configs)
+        run_single_bolt(bolt, flags, covars, qcovars, remove, log_file, **configs)
 
 def check_bolt(pth):
     if not pth and not os.path.isdir('BOLT-LMM_v2.3.4'):
@@ -167,7 +167,7 @@ def check_bolt(pth):
     return pth
 
 
-def run_single_bolt(bolt, flags, covars, qcovars, remove, **kwargs):
+def run_single_bolt(bolt, flags, covars, qcovars, remove, log_file, **kwargs):
 
     config = sum([[f'--{key}', f'{value}'] for key, value in kwargs.items()], [])
     for c in covars: config += ['--covarCol', c]
@@ -180,8 +180,17 @@ def run_single_bolt(bolt, flags, covars, qcovars, remove, **kwargs):
 
     cmd = [join(bolt, 'bolt')] + flags + config
     print(cmd)
-    process = Popen(cmd)
-    stdout, stderr = process.communicate()
+    with Popen(cmd, stdout=PIPE, stderr=STDOUT) as p, open(log_file, 'wb') as f:
+        for line in p.stdout:
+            sys.stdout.buffer.write(line)
+            f.write(line)
+    # process = Popen(cmd, stdout=PIPE)
+    # stdout, stderr = process.communicate()
+    # print('stdout:')
+    # print(stdout)
+
+    # print('stderr:')
+    # print(stderr)
 
 
 if __name__ == '__main__':
