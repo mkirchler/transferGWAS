@@ -8,7 +8,7 @@ transferGWAS is a method for performing genome-wide association studies on whole
 
 * **LMM association analysis:** this part is a wrapper for the BOLT-LMM association analysis, including some basic preprocessing steps. If you have experience with performing GWAS, you probably won't need this part.
 
-* **models:** here you can find our pretrained models.
+* **models:** here you can find our pretrained models (only after you downloaded them via `./download_models.sh`)
 
 * **simulation study:** This is the code for the simulation study.
 
@@ -19,6 +19,12 @@ Start by cloning this repo:
 ```bash
 git clone https://github.com/mkirchler/transferGWAS.git
 ```
+
+Then you can download pretrained models into a new `models` directory via
+```bash
+./download_models.sh
+```
+This includes the CNN pretrained on the EyePACS dataset to predict Diabetic Retinopathy and the StyleGAN2 on retinal fundus images for the simulation study.
 
 ### Python
 

@@ -115,7 +115,7 @@ def main():
         bolt = check_bolt(args.bolt)
         out_dir = args.out_dir
         out_fn = args.out_fn if args.out_fn else 'PC_%d.txt'
-        out_imp = args.out_fn_img if args.out_fn_img else 'PC_%d.imp.txt'
+        out_imp = args.out_fn_imp if args.out_fn_imp else 'PC_%d.imp.txt'
         run_imputed = args.run_imputed
         first, last = args.first_pc, args.last_pc
         remove = args.remove
@@ -158,18 +158,18 @@ def main():
         run_single_bolt(bolt, flags, covars, qcovars, remove, log_file, **configs)
 
 def check_bolt(pth):
-    if not pth and not os.path.isdir('BOLT-LMM_v2.3.4'):
+    if not pth:
+        pth = 'BOLT-LMM_v2.3.4'
+    if not os.path.isdir(pth):
         b_tgz = 'bolt.tar.gz'
         print('downloading BOLT-LMM ...')
         request = requests.get('https://storage.googleapis.com/broad-alkesgroup-public/BOLT-LMM/downloads/BOLT-LMM_v2.3.4.tar.gz')
         open(b_tgz, 'wb').write(request.content)
         print('finished download')
         tar = tarfile.open(b_tgz, 'r:gz')
-        tar.extractall()
+        tar.extractall('/'.join(pth.strip('/').split('/')[:-1]))
         tar.close()
         os.remove(b_tgz)
-    if not pth:
-        pth = 'BOLT-LMM_v2.3.4/'
     return pth
 
 

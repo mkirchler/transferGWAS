@@ -13,8 +13,8 @@ n_causal = 1250
 
 ## LATENT SPACE CODES:
 
-# path to bed-files (no file-extension); files should be split by chromosomes, and chromosome number should be indicated by `%d`; single .fam needs to be specified alone
-bed = "/mnt/projects/ukbiobank/derived/projects/deep_test/genetics/microarray/ukb_chr%d.caucasian_maf-0.001_ld-0.8"
+# path to bed-files (no file-extension); files should be split by chromosomes, and chromosome number should be indicated by `%s`; single .fam needs to be specified alone
+bed = "/mnt/projects/ukbiobank/derived/projects/deep_test/genetics/microarray/ukb_chr%s.caucasian_maf-0.001_ld-0.8"
 fam = "/mnt/projects/ukbiobank/derived/projects/deep_test/genetics/microarray/ukb_chr1.caucasian_maf-0.001_ld-0.8.fam"
 # normalize genetic matrix before simulation
 normalize = true
@@ -61,7 +61,9 @@ cov = "../run_bolt/covariates.txt"
 cov_columns = ['sex', 'assessment_center', 'geno_batch']
 qcov_columns = ['age', 'genet_PC_{1:10}']
 threads = 30
+# only change if you have already downloaded BOLT-LMM to another location
+bolt='../run_bolt/BOLT-LMM_v2.3.4/'
 # leave empty for default hg19 map
 ref_map = ""
-# leave empty for default EUR LDScores
+# leave empty for default 1000G European ancestry LDScores
 ldscores = ""
