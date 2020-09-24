@@ -13,7 +13,16 @@ transferGWAS is a method for performing genome-wide association studies on whole
 * **simulation study:** This is the code for the simulation study.
 
 
-## Python
+## Getting started
+
+Start by cloning this repo:
+```bash
+git clone https://github.com/mkirchler/transferGWAS.git
+```
+
+### Python
+
+**TODO**: create ymls
 
 All parts require python 3.6+, and all deep learning parts are built in `pytorch`. We recommend using some up-to-date version of anaconda and then creating a new environment from the `environment.yml`:
 ```bash
@@ -25,7 +34,7 @@ If you want to run part of the (non-deep learning) code on a CPU-only machine, u
 conda env create --file environment-cpu.yml
 ```
 
-## Getting started
+### Running a transferGWAS
 
 If you don't want to train your own network, just:
 

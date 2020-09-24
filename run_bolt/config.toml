@@ -23,6 +23,8 @@ lastPC = 0
 
 # where to save the results
 outputDirectory = "results"
+outputFn = 'PC_%d.txt'
+outputFnImp = 'PC_%d.imp.txt'
 
 # keep empty to automatically download into new directory "BOLT-LMM_v2.3.4"
 boltDirectory = ""

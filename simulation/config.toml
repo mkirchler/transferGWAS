@@ -1,0 +1,67 @@
+## SETTINGS FOR THE SIMULATION STUDY
+
+
+## GENERAL SIMULATION SETTINGS
+
+# seeds = [3156, 9432, 6458, 5308, 6748, 5479, 5487, 3762, 5748, 5265]
+seeds = [3156]
+# will create synthetic images for all, and then subsample using sample-sizes
+sample_sizes = [5000]
+exp_vars = [0.7]
+n_causal = 1250
+
+
+## LATENT SPACE CODES:
+
+# path to bed-files (no file-extension); files should be split by chromosomes, and chromosome number should be indicated by `%d`; single .fam needs to be specified alone
+bed = "/mnt/projects/ukbiobank/derived/projects/deep_test/genetics/microarray/ukb_chr%d.caucasian_maf-0.001_ld-0.8"
+fam = "/mnt/projects/ukbiobank/derived/projects/deep_test/genetics/microarray/ukb_chr1.caucasian_maf-0.001_ld-0.8.fam"
+# normalize genetic matrix before simulation
+normalize = true
+# optional subset of  individuals; leave empty or space-separated values with FID and IID column (no header)
+indiv = ""
+# indiv = "../run_bolt/indiv.txt"
+
+
+## SYNTHETIC IMAGES
+
+# path to StyleGAN2 models
+stylegan2_models = '../models/'
+stylegan2_name = 'stylegan2_healthy'
+# truncation parameter - tradeoff between more diversity and better quality images
+psi = 0.4
+# use different noise vectors for different synthetic images (will decrease effect size of exp_vars)
+diff_noise = false
+# scale parameter for more image diversity
+mult_scale = 2.0
+
+## FEATURE CONDENSATION
+
+# number of feature dimensions to condense
+n_pcs = 100
+# image resize to
+size = 448
+# data augmentation
+tfms = "tta"
+# model architecture and pretraining weights
+model = "resnet50"
+pretraining = 'imagenet'
+# spatial aggregation at convolutional layers; "mean" or "max"
+spatial = 'mean'
+# at which layers to condense; can be L2, L3, L4, or the specific module, such as layer4.2.conv3
+layers = ["L4"]
+
+# GWAS USING BOLT-LMM
+
+# run BOLT-LMM on all dimension from first_pc to last_pc (last_pc needs to be < n_pcs)
+first_pc = 0
+last_pc = 1
+# covariates to adjust for; space separated, as in main GWAS (see there for details); required
+cov = "../run_bolt/covariates.txt"
+cov_columns = ['sex', 'assessment_center', 'geno_batch']
+qcov_columns = ['age', 'genet_PC_{1:10}']
+threads = 30
+# leave empty for default hg19 map
+ref_map = ""
+# leave empty for default EUR LDScores
+ldscores = ""

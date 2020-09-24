@@ -58,7 +58,8 @@ def main():
             default=9,
             help='will run BOLT-LMM on `first_pc` to `last_pc`. Default: 9',
             )
-    parser.add_argument('--out', type=str, help='path to output directory')
+    parser.add_argument('--out_dir', type=str, help='path to output directory')
+    parser.add_argument('--out_fn', type=str, default='PC_%d.txt', help='output filename; should include a `%d` for the PC')
     parser.add_argument('--bolt', type=str, help='path to BOLT-LMM directory. If none specified, will try to download bolt-lmm to `bolt/`')
     parser.add_argument('--threads', default=130, type=int, help='how many threads to use for BOLT-LMM')
     # parser.add_argument('--maf', default=0.001, type=float, help='Minor allele frequency in microarray data.')
@@ -71,6 +72,7 @@ def main():
 
 
     parser.add_argument('--run_imputed', action='store_true', help='Set flag if you want to run analysis on imputed data')
+    parser.add_argument('--out_fn_imp', default='PC_%d.imp.txt', type=str, help='output filename for imputed; should include a `%d` for the PC')
     parser.add_argument('--bgen', type=str, help='path to imputed .bgen files. Multiple files via `foo_{1:22}.bgen`')
     parser.add_argument('--sample', type=str, help='path to imputed .sample files. Multiple files via `foo_{1:22}.sample`')
     parser.add_argument('--imp_maf', default=0.001, type=float, help='Minor allele frequency in imputed data.')
@@ -93,7 +95,9 @@ def main():
         covars = configs.pop('covColumns')
         qcovars = configs.pop('qCovColumns')
         bolt = check_bolt(configs.pop('boltDirectory'))
-        out = configs.pop('outputDirectory')
+        out_dir = configs.pop('outputDirectory')
+        out_fn = configs.pop('outputFn')
+        out_imp = configs.pop('outputFnImp')
         run_imputed = configs.pop('runImputed')
         if not run_imputed:
             configs.pop('bgenFile')
@@ -109,7 +113,9 @@ def main():
         covars = args.cov_cols
         qcovars = args.qcov_cols
         bolt = check_bolt(args.bolt)
-        out = args.out
+        out_dir = args.out_dir
+        out_fn = args.out_fn if args.out_fn else 'PC_%d.txt'
+        out_imp = args.out_fn_img if args.out_fn_img else 'PC_%d.imp.txt'
         run_imputed = args.run_imputed
         first, last = args.first_pc, args.last_pc
         remove = args.remove
@@ -140,14 +146,14 @@ def main():
 
 
     pcs = range(first, last+1)
-    os.makedirs(out, exist_ok=True)
-    os.makedirs(join(out, 'log'), exist_ok=True)
+    os.makedirs(out_dir, exist_ok=True)
+    os.makedirs(join(out_dir, 'log'), exist_ok=True)
     for pc in pcs:
         configs['phenoCol'] = f'PC_{pc}'
-        configs['statsFile'] = join(out, f'PC_{pc}.txt')
-        log_file = join(out, 'log', f'PC_{pc}.log')
+        configs['statsFile'] = join(out_dir, out_fn % pc)
+        log_file = join(out_dir, 'log', f'PC_{pc}.log')
         if run_imputed:
-            configs['statsFileBgenSnps'] = join(out, f'PC_{pc}_imputed.txt')
+            configs['statsFileBgenSnps'] = join(out_dir, out_imp % pc)
 
         run_single_bolt(bolt, flags, covars, qcovars, remove, log_file, **configs)
 

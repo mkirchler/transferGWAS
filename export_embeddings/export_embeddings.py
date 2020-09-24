@@ -44,6 +44,7 @@ def main():
             default='results',
             help='Directory to save the results',
             )
+    parser.add_argument('--save_str', type=str, help='Optional name of file to save to. Needs to contain two `%s` substrings (for layer and explained variance).')
     parser.add_argument('--img_size', type=int, default=448, help='Input image size')
     parser.add_argument(
             '--tfms',
@@ -114,14 +115,24 @@ def main():
         explained_var = pca.explained_variance_ratio_
 
         pret_part = args.pretraining.split('/')[-1].split('.')[0]
-        save_str = join(
-                args.out_dir,
-                f'{args.model}_{pret_part}_{layer_name}.txt',
-                )
-        save_str_evr = join(
-                args.out_dir,
-                f'{args.model}_{pret_part}_{layer_name}_explained_variance.txt',
-                )
+        if not args.save_str:
+            save_str = join(
+                    args.out_dir,
+                    f'{args.model}_{pret_part}_{layer_name}.txt',
+                    )
+            save_str_evr = join(
+                    args.out_dir,
+                    f'{args.model}_{pret_part}_{layer_name}_explained_variance.txt',
+                    )
+        else:
+            save_str = join(
+                    args.out_dir,
+                    args.save_str % (layer_name, ''),
+                    )
+            save_str_evr = join(
+                    args.out_dir,
+                    args.save_str % (layer_name, '_explained_variance'),
+                    )
 
         to_file(
                 pca_embedding,
