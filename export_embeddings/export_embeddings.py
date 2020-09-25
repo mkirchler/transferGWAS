@@ -45,7 +45,7 @@ def main():
             help='Directory to save the results',
             )
     parser.add_argument(
-            'base_img_dir',
+            '--base_img_dir',
             type=str,
             help='Path to image directory.
             If specified, all paths in `img_csv` will be preprended by this')

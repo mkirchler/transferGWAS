@@ -42,19 +42,21 @@ Images must be in a standard image format that `PIL` can read (such as `.png` or
 
 ### Reproducing paper results
 
-We provide the filenames to the input data we used in our paper under `../reproducibility/both.csv` which you can use as `PATH_TO_CSV`, and you will need to provide the path to the directory via (note that you will first need to preprocess the data as indicated in `../reproducibility/`):
+We provide the filenames to the input data we used in our paper under `../reproducibility/both.csv` which you can use as `PATH_TO_CSV`, and you will need to provide the path to the directory to `--base_img_dir` as in:
 
 ```bash
 # ImageNet pretraining
 python export_embeddings.py ../both.csv results/ \
+                --base_img_dir PATH_TO_IMAGE_DIR
                 --pretraining imagenet \
                 --layer L4
 
 
 # EyePACS pretraining
 python export_embeddings.py ../both.csv results/ \
+                --base_img_dir PATH_TO_IMAGE_DIR
                 --pretraining "../models/resnet50_eyepacs.pt"
                 --layer L2
 
 ```
-
+Note that you will first need to preprocess the data as indicated in `../reproducibility/`.
