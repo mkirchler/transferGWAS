@@ -22,7 +22,7 @@ from stylegan2_pytorch.stylegan2_pytorch import image_noise
 # import toml
 
 from util import LATENT_DIR, get_latent_bolt, IMG_DIR, get_img_dir
-torch.set_num_threads(2)
+# torch.set_num_threads(2)
 
 
 # CONFIG = toml.load('config.toml')

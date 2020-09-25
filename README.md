@@ -33,12 +33,14 @@ This includes the CNN pretrained on the EyePACS dataset to predict Diabetic Reti
 All parts require python 3.6+, and all deep learning parts are built in `pytorch`. We recommend using some up-to-date version of anaconda and then creating a new environment from the `environment.yml`:
 ```bash
 conda env create --file environment.yml
+
 ```
 
-If you want to run part of the (non-deep learning) code on a CPU-only machine, use the `environment-cpu.yml` file on this machine (note that this won't install any of the `pytorch` libraries):
+If you want to run part of the non-deep learning code (especially the BOLT-LMM) on a CPU-only machine, use the `environment_cpu.yml` file for that:
 ```bash
-conda env create --file environment-cpu.yml
+conda env create --file environment_cpu.yml
 ```
+Note that this won't install any of the `pytorch` libraries - you can use it to with the `run_bolt` and for stages 1 and 4 in the `simulation`.
 
 ### Running a transferGWAS
 
