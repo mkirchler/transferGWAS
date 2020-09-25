@@ -25,4 +25,8 @@ or you can only run any subset of stages (make sure that all previous stages hav
 python run_all.py config.toml --stages 3 4 --verbose
 ```
 
+Note that this will always run **all** seeds, sample-sizes, and explained variances. I.e., if you specify 10 `seeds`, 3 `sample_sizes` and 3 `exp_vars` in your `config.toml`, this will run `3*3*10=90` simulations. If you specified `first_pc = 0` and `last_pc = 9` this will require 900 runs of BOLT-LMM (i.e. it will take some time).
+
 If your machine has multiple GPUs, the code will use the first listed GPU by default (necessary for stages 2 & 3). To change that, it's easiest to set the environment variable first as e.g. `CUDA_VISIBLE_DEVICES=2`.
+
+Summary statistics will be written to the `results` directory. 
