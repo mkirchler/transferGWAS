@@ -10,18 +10,11 @@ python export_embeddings.py PATH_TO_CSV OUT_DIR \
                 --dev cuda:0 \
                 --n_pcs 50 \
                 --model resnet50 \
-                --pretraining imagenet \ # or e.g. "../models/eyepacs_pretrained.pt"
+                --pretraining imagenet \ # or e.g. "../models/resnet50_eyepacs.pt"
                 --layer L2 L3 L4
 ```
 where `PATH_TO_CSV` is a `.csv` files with `IID` and `path` column (see `Input format` below), and `OUT_DIR` is the directory to save the results.
 
-### TODO Python requirements
-
-
-Install the conda environment (same as in the pretraining directory) via
-```bash
-conda ...
-```
 
 ### Input format
 
@@ -45,3 +38,23 @@ IID,path,instance
 ```
 
 Images must be in a standard image format that `PIL` can read (such as `.png` or `.jpg`). If your data is in another format and you don't want to convert it, you need to extend the `_load_item` method in the `ImageData` class to read in your data format.
+
+
+### Reproducing paper results
+
+We provide the filenames to the input data we used in our paper under `../reproducibility/both.csv` which you can use as `PATH_TO_CSV`, and you will need to provide the path to the directory via (note that you will first need to preprocess the data as indicated in `../reproducibility/`):
+
+```bash
+# ImageNet pretraining
+python export_embeddings.py ../both.csv results/ \
+                --pretraining imagenet \
+                --layer L4
+
+
+# EyePACS pretraining
+python export_embeddings.py ../both.csv results/ \
+                --pretraining "../models/resnet50_eyepacs.pt"
+                --layer L2
+
+```
+

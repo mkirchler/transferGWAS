@@ -28,19 +28,23 @@ This includes the CNN pretrained on the EyePACS dataset to predict Diabetic Reti
 
 ### Python
 
-**TODO**: create ymls
 
 All parts require python 3.6+, and all deep learning parts are built in `pytorch`. We recommend using some up-to-date version of anaconda and then creating a new environment from the `environment.yml`:
 ```bash
 conda env create --file environment.yml
-
+conda activate transfer_gwas
 ```
 
 If you want to run part of the non-deep learning code (especially the BOLT-LMM) on a CPU-only machine, use the `environment_cpu.yml` file for that:
 ```bash
 conda env create --file environment_cpu.yml
 ```
-Note that this won't install any of the `pytorch` libraries - you can use it to with the `run_bolt` and for stages 1 and 4 in the `simulation`.
+Note that this won't install any of the `pytorch` libraries - you can only use it for the `run_bolt` and for stages 1 and 4 in the `simulation`.
+
+
+### Reproducing paper results
+
+To reproduce results from our paper, see the `reproducibility` directory.
 
 ### Running a transferGWAS
 
@@ -50,4 +54,5 @@ If you don't want to train your own network, just:
 * run the **LMM association analysis** on those condensed embeddings.
 
 If you do want to train your own network, first check out the **pretraining** part.
+
 

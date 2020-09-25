@@ -44,6 +44,11 @@ def main():
             default='results',
             help='Directory to save the results',
             )
+    parser.add_argument(
+            'base_img_dir',
+            type=str,
+            help='Path to image directory.
+            If specified, all paths in `img_csv` will be preprended by this')
     parser.add_argument('--save_str', type=str, help='Optional name of file to save to. Needs to contain two `%s` substrings (for layer and explained variance).')
     parser.add_argument('--img_size', type=int, default=448, help='Input image size')
     parser.add_argument(
@@ -85,6 +90,7 @@ def main():
             args.img_csv,
             tfms=args.tfms,
             img_size=args.img_size,
+            base_img=args.base_img_dir,
             )
     model = load_model(
             args.model,
@@ -143,9 +149,11 @@ def main():
                 )
 
 
-def load_data_from_csv(fn, tfms='basic', img_size=448):
+def load_data_from_csv(fn, tfms='basic', img_size=448, base_img=''):
     '''load csv into ImageData instance(s)'''
     df = pd.read_csv(fn)
+    if base_img:
+        df.path = [join(base_img, p) for p in df.path]
     subset = None
     instance_grouping = 'instance'
     if instance_grouping in df.columns:
