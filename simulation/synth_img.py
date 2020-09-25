@@ -19,18 +19,19 @@ from tqdm import tqdm
 from stylegan2_pytorch import Trainer
 from stylegan2_pytorch.stylegan2_pytorch import image_noise
 
-import toml
+# import toml
 
+from util import LATENT_DIR, get_latent_bolt, IMG_DIR, get_img_dir
 torch.set_num_threads(2)
 
 
-CONFIG = toml.load('config.toml')
-LATENT_DIR = 'latent'
-LATENT_BOLT_TEMPL = 'exp_var%.3f_nc%d_seed%d.txt'
+# CONFIG = toml.load('config.toml')
+# LATENT_DIR = 'latent'
+# LATENT_BOLT_TEMPL = 'exp_var%.3f_nc%d_seed%d.txt'
 
 # EMB_DIR = CONFIG['emb_dir']
-IMG_DIR = 'images'
-IMG_DIR_TEMPL = 'exp_%s_var%.3f_nc%d_sc%.2f_seed%d'
+# IMG_DIR = 'images'
+# IMG_DIR_TEMPL = 'exp_%s_var%.3f_nc%d_sc%.2f_seed%d'
 # MDIR = CONFIG['stylegan2_models']
 # RDIR = CONFIG['stylegan2_models']
 # IMG_DIR_TEMPL = CONFIG['img_dir_templ']
@@ -125,7 +126,7 @@ def synthesize_gwas_data(
     subset (None or int): only create subset of images, for debugging
     seed (int): random seed
     '''
-    pth = join(LATENT_DIR, LATENT_BOLT_TEMPL % (exp_var, n_causal, seed))
+    pth = join(LATENT_DIR, get_latent_bolt(exp_var, n_causal, seed))
     latent = pd.read_csv(pth, sep=' ', index_col=1).drop('FID', 1)
     if subset is not None:
         latent = latent.sample(subset, random_state=123)
@@ -139,7 +140,7 @@ def synthesize_gwas_data(
     if same_noise:
         N = image_noise(1, img_size)
 
-    out_img_dir = join(IMG_DIR, IMG_DIR_TEMPL % (name, exp_var, n_causal, mult_scale, seed))
+    out_img_dir = join(IMG_DIR, get_img_dir(name, exp_var, n_causal, mult_scale, seed))
     if os.path.isdir(out_img_dir):
         shutil.rmtree(out_img_dir)
     os.mkdir(out_img_dir)

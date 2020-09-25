@@ -6,49 +6,10 @@ import toml
 import pandas as pd
 import numpy as np
 
-IMG_DIR = 'images'
-EMB_DIR = 'embeddings'
-OUT_TEMPL = 'exp_%s_var%.3f_nc%d_sc%.2f_%s_%s_%s_s%d_%s_seed%d_ss%d_pheno_%s'
+from util import EMB_DIR, OUT_DIR, \
+        PATH_TO_EXPORT, PATH_TO_GWAS, \
+        get_out, get_img_dir, get_emb
 
-PATH_TO_EXPORT = '../export_embeddings/export_embeddings.py'
-PATH_TO_GWAS = '../run_bolt/run_gwas.py'
-
-OUT_DIR = 'results'
-
-def get_img_dir(gan_name, exp_var, n_causal, mult_scale, seed):
-    img_dir_templ = 'exp_%s_var%.3f_nc%d_sc%.2f_seed%d'
-    return join(
-            IMG_DIR,
-            img_dir_templ % (gan_name, exp_var, n_causal, mult_scale, seed),
-            )
-
-def get_emb(
-        gan_name,
-        exp_var,
-        n_causal,
-        mult_scale,
-        model_name,
-        layer,
-        spatial,
-        img_size,
-        tfms,
-        seed,
-        options,
-        ):
-    emb_templ = 'exp_%s_var%.3f_nc%d_sc%.2f_%s_%s_%s_s%d_%s_seed%d%s.txt'
-    return emb_templ % (
-            gan_name,
-            exp_var,
-            n_causal,
-            mult_scale,
-            model_name,
-            layer,
-            spatial,
-            img_size,
-            tfms,
-            seed,
-            options,
-            )
 
 def main():
     parser = argparse.ArgumentParser()
@@ -278,7 +239,8 @@ def simulation_stage_4(
                                 f'_ss{sample_size}',
                                 ),
                             )
-                    out_fn = OUT_TEMPL % (
+
+                    out_fn = get_out(
                             gan_name,
                             exp_var,
                             n_causal,
@@ -290,7 +252,6 @@ def simulation_stage_4(
                             tfms,
                             seed,
                             sample_size,
-                            '%d',
                         )
                     embeddings = pd.read_csv(emb, sep=' ').loc[:, 'IID']
                     sample = embeddings.sample(sample_size, random_state=seed)

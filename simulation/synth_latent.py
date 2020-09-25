@@ -35,10 +35,13 @@ from tqdm import tqdm
 # LATENT_DIR = CONFIG['latent_dir']
 # LATENT_BOLT_TEMPL = CONFIG['latent_bolt_templ']
 # LATENT_PKL_TEMPL = CONFIG['latent_pkl_templ']
-LATENT_DIR = 'latent'
-LATENT_BOLT_TEMPL = 'exp_var%.3f_nc%d_seed%d.txt'
-LATENT_PKL_TEMPL = 'exp_var%.3f_nc%d_seed%d.pkl'
+
+from util import LATENT_DIR, get_latent_pkl, get_latent_bolt
+# LATENT_DIR = 'latent'
+# LATENT_BOLT_TEMPL = 'exp_var%.3f_nc%d_seed%d.txt'
+# LATENT_PKL_TEMPL = 'exp_var%.3f_nc%d_seed%d.pkl'
 os.makedirs(LATENT_DIR, exist_ok=True)
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -158,7 +161,7 @@ def simulate_full_data(
         ):
     '''create simulated phenotype
 
-    Build simulated latent code for input chromosomes. Save results to default pickle and space-separated value file for use in other parts of the pipeline to corresponding version of LATENT_BOLT_TEMPL & LATENT_PKL_TEMPL
+    Build simulated latent code for input chromosomes. Save results to default pickle and space-separated value file for use in other parts of the pipeline to corresponding `latent` directory
 
     # Parameters
     chromos (list): list of ints, all chromos to include
@@ -192,8 +195,8 @@ def simulate_full_data(
             seed=seed,
             )
 
-    s_pkl = join(LATENT_DIR, LATENT_PKL_TEMPL % (exp_var, n_causal, seed))
-    s_bolt = join(LATENT_DIR, LATENT_BOLT_TEMPL % (exp_var, n_causal, seed))
+    s_pkl = join(LATENT_DIR, get_latent_pkl(exp_var, n_causal, seed))
+    s_bolt = join(LATENT_DIR, get_latent_bolt(exp_var, n_causal, seed))
     pickle.dump([pheno, eff, null, causal, W, rsids], open(s_pkl, 'wb'))
     pheno['FID'] = pheno['IID'] = pheno.index
     pheno = pheno[['FID', 'IID']+list(range(512))]
