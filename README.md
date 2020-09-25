@@ -20,11 +20,11 @@ Start by cloning this repo:
 git clone https://github.com/mkirchler/transferGWAS.git
 ```
 
-Then you can download pretrained models into a new `models` directory via
+You can download pretrained models via
 ```bash
 ./download_models.sh
 ```
-This includes the CNN pretrained on the EyePACS dataset to predict Diabetic Retinopathy and the StyleGAN2 on retinal fundus images for the simulation study.
+This includes the CNN pretrained on the EyePACS dataset to predict Diabetic Retinopathy and the StyleGAN2 on retinal fundus images for the simulation study (the ImageNet-pretrained network is included in the pytorch library).
 
 ### Python
 
