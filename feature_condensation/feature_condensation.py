@@ -47,8 +47,8 @@ def main():
     parser.add_argument(
             '--base_img_dir',
             type=str,
-            help='Path to image directory.
-            If specified, all paths in `img_csv` will be preprended by this')
+            help='Path to image directory.'
+            'If specified, all paths in `img_csv` will be preprended by this')
     parser.add_argument('--save_str', type=str, help='Optional name of file to save to. Needs to contain two `%s` substrings (for layer and explained variance).')
     parser.add_argument('--img_size', type=int, default=448, help='Input image size')
     parser.add_argument(
