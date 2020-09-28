@@ -2,7 +2,7 @@
 
 Here we provide instructions on how to reproduce the results from our paper. In order to do so, you will need to have access to UK Biobank data; specifically, you will need genetic microarray and imputed data, retinal fundus imaging data, and phenotypic data. 
 
-We provide the list of individuals we used in our analysis (`indiv.txt`), as well as the filenames of all images we used (in `both.csv`).
+We provide the list of individuals we used in our analysis (`indiv.txt`), as well as the filenames of all images we used (in `images.csv`).
 
 ## Preprocessing data
 
