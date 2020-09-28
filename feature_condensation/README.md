@@ -4,7 +4,7 @@ This directory contains code to condense images into low-dimensional embeddings.
 
 Run via
 ```bash
-python export_embeddings.py PATH_TO_CSV OUT_DIR \
+python feature_condensation.py PATH_TO_CSV OUT_DIR \
                 --img_size 448 \
                 --tfms tta \
                 --dev cuda:0 \
@@ -46,14 +46,14 @@ We provide the filenames to the input data we used in our paper under `../reprod
 
 ```bash
 # ImageNet pretraining
-python export_embeddings.py ../both.csv results/ \
+python feature_condensation.py ../both.csv results/ \
                 --base_img_dir PATH_TO_IMAGE_DIR
                 --pretraining imagenet \
                 --layer L4
 
 
 # EyePACS pretraining
-python export_embeddings.py ../both.csv results/ \
+python feature_condensation.py ../both.csv results/ \
                 --base_img_dir PATH_TO_IMAGE_DIR
                 --pretraining "../models/resnet50_eyepacs.pt"
                 --layer L2

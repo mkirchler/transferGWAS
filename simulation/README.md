@@ -12,17 +12,17 @@ The simulation study is divided into several steps:
 
 ### Setup and run
 
-To run the whole simulation, you will first need to prepare the genetic and covariate data as indicated in the `../run_bolt/README.md`. If you only want to create the synthetic dataset it's enough to only prepare the `.bed` files.
+To run the whole simulation, you will first need to prepare the genetic and covariate data as indicated in the `../lmm/README.md`. If you only want to create the synthetic dataset it's enough to only prepare the `.bed` files.
 
-You can configure the pipeline via the `config.toml` file. Importantly, you will need to fill in the `bed` and `fam` file for the genetic data, as well as potentially the covariate data (`cov`) for the GWA analysis (if you already created the covariates as in `../run_bolt/preprocessing_cov.py`, the default values should work). All other parameters are set to reasonable defaults.
+You can configure the pipeline via the `config.toml` file. Importantly, you will need to fill in the `bed` and `fam` file for the genetic data, as well as potentially the covariate data (`cov`) for the GWA analysis (if you already created the covariates as in `../lmm/preprocessing_cov.py`, the default values should work). All other parameters are set to reasonable defaults.
 
 The whole pipeline can be run with:
 ```bash
-python run_all.py config.toml --stages 1 2 3 4 --verbose
+python run_simulation.py config.toml --stages 1 2 3 4 --verbose
 ```
 or you can only run any subset of stages (make sure that all previous stages have finished before):
 ```bash
-python run_all.py config.toml --stages 3 4 --verbose
+python run_simulation.py config.toml --stages 3 4 --verbose
 ```
 
 Note that this will always run **all** seeds, sample-sizes, and explained variances. I.e., if you specify 10 `seeds`, 3 `sample_sizes` and 3 `exp_vars` in your `config.toml`, this will run `3*3*10=90` simulations. If you specified `first_pc = 0` and `last_pc = 9` this will require 900 runs of BOLT-LMM (i.e. it will take some time).

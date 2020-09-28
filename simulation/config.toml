@@ -69,12 +69,12 @@ layers = ["L4"]
 first_pc = 0
 last_pc = 1
 # covariates to adjust for; space separated, as in main GWAS (see there for details); required
-cov = "../run_bolt/covariates.txt"
+cov = "../lmm/covariates.txt"
 cov_columns = ['sex', 'assessment_center', 'geno_batch']
 qcov_columns = ['age', 'genet_PC_{1:10}']
 threads = 30
 # only change if you have already downloaded BOLT-LMM to another location
-bolt='../run_bolt/BOLT-LMM_v2.3.4/'
+bolt='../lmm/BOLT-LMM_v2.3.4/'
 # leave empty for default hg19 map
 ref_map = ""
 # leave empty for default 1000G European ancestry LDScores

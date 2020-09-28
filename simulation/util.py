@@ -6,8 +6,8 @@ IMG_DIR = 'images'
 EMB_DIR = 'embeddings'
 OUT_DIR = 'results'
 
-PATH_TO_EXPORT = '../export_embeddings/export_embeddings.py'
-PATH_TO_GWAS = '../run_bolt/run_gwas.py'
+PATH_TO_EXPORT = '../feature_condensation/feature_condensation.py'
+PATH_TO_GWAS = '../lmm/run_lmm.py'
 
 
 def get_latent_pkl(exp_var, n_causal, seed):

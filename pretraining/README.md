@@ -43,7 +43,7 @@ python -c "import pandas as pd; pd.concat([pd.read_csv('trainLabels.csv'), pd.re
 Once the data is preprocessed, you can train the network via:
 
 ```bash
-python multi_task.py data/ full_labels.csv \
+python training_main.py data/ full_labels.csv \
             --epochs 100 \
             --res_depth 50 \    # ResNet depth; 18, 34, or 50
             --size 448 \        # input image size
@@ -55,12 +55,12 @@ python multi_task.py data/ full_labels.csv \
 ```
 
 (in case you used other variables in the preprocessing steps you will need to replace `data/` with your image directory and `full_labels.csv` with your label file).
-See `python multi_task.py -h` for additional arguments.
+See `python training_main.py -h` for additional arguments.
 Per default, this will save the best final model into the `models/` directory.
 
 ### Weights & Biases tracking
 
-If you want to monitor training progress through `Weights & Biases`, just set the `WANDB = True` flag at the beginning of the `multi_task.py` file. You will first need to setup an account at https://app.wandb.ai/ and configure your credentials.
+If you want to monitor training progress through `Weights & Biases`, just set the `WANDB = True` flag at the beginning of the `training_main.py` file. You will first need to setup an account at https://app.wandb.ai/ and configure your credentials.
 
 ## Training on another dataset
 
@@ -85,4 +85,4 @@ model = models.resnet50() # assuming you trained with res_depth = 50
 model.load_state_dict(torch.load(PATH_TO_YOUR_MODEL, map_location='cpu'))
 ```
 
-To extract the features for GWA analysis, use the `export_embeddings` code.
+To extract the features for GWA analysis, use the `feature_condensation` code.

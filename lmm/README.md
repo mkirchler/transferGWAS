@@ -28,7 +28,7 @@ python preprocessing_cov.py path/to/phenotypes.csv \
 
 If you want to use the wrapper for BOLT-LMM, we recommend to fill out the `config.toml` file and then run the GWAS via:
 ```bash
-python run_gwas.py --config config.toml
+python run_lmm.py --config config.toml
 ```
 
 If you have already downloaded BOLT-LMM you can specify the path in the `config.toml`, otherwise just leave the line and it will get downloaded automatically.
@@ -36,6 +36,6 @@ If you have already downloaded BOLT-LMM you can specify the path in the `config.
 If you run on the imputed data, BOLT-LMM will likely complain in the first run that there are missing data in the `bgen` files and write a `bolt.in_plink_but_not_imputed.FID_IID.X.txt` (with `X` the number of missing data points). Just add this in the `config.toml` to the `remove` variable. 
 
 
-Alternatively to the configuration file, you can also leave out the `--config` flag and specify all parameters (if `--config` is specified, all other arguments are ignored); see `python run_gwas.py -h` for details.
+Alternatively to the configuration file, you can also leave out the `--config` flag and specify all parameters (if `--config` is specified, all other arguments are ignored); see `python run_lmm.py -h` for details.
 
 

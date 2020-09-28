@@ -10,7 +10,7 @@ phenoFile = "path/to/condensed/embeddings.txt"
 
 # path to covariate file
 # space-sperataed, first two columns should be `FID` and `IID`, then the covariates
-covarFile = "path/to/covariates.txt"
+covarFile = "covariates.txt"
 
 # list of categorical covariates to adjust for, as in `covarFile`
 covColumns = [ "sex", "assessment_center", "geno_batch" ]
@@ -19,7 +19,7 @@ qCovColumns = [ "age", "genet_PC_{1:10}" ]
 
 # run BOLT-LMM on all PCs with firstPC <= PC <= lastPC
 firstPC = 0
-lastPC = 0
+lastPC = 9
 
 # where to save the results
 outputDirectory = "results"
