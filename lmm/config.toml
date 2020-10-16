@@ -21,6 +21,12 @@ qCovColumns = [ "age", "genet_PC_{1:10}" ]
 firstPC = 0
 lastPC = 9
 
+# whether to inverse-normal rank-transform the input data, either:
+#   '' (no INT),
+#   'marginal' (perform INT on phenotypes) or
+#   'adjusted' (perform INT on residuals after correcting for confounders)
+INT = 'adjusted'
+
 # where to save the results
 outputDirectory = "results"
 outputFn = 'PC_%d.txt'

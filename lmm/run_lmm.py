@@ -7,6 +7,13 @@ from subprocess import Popen, PIPE, STDOUT
 import requests
 import tarfile
 
+import pandas as pd
+from scipy import stats
+from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import OneHotEncoder
+
+from tqdm import tqdm
+
 import toml
 
 
@@ -17,6 +24,12 @@ def main():
     parser.add_argument('--bim', type=str, help='path to microarray bim file (multiple files e.g. via `foo_{1:22}.bim`)')
     parser.add_argument('--fam', type=str, help='path to microarray fam file')
     parser.add_argument('--cov', type=str, help='path to space-separated covariate file; first two columns should be FID and IID')
+    parser.add_argument('--INT',
+            type=str,
+            default='adjusted',
+            choices=['', 'marginal', 'adjusted'],
+            help='whether to inverse-normal rank-transform the input data. empty, marginal or adjusted',
+            )
     parser.add_argument(
             '--model',
             type=str,
@@ -92,6 +105,7 @@ def main():
 
     if args.config is not None:
         configs = toml.load(args.config)
+        in_transform = configs.pop('INT')   
         covars = configs.pop('covColumns')
         qcovars = configs.pop('qCovColumns')
         bolt = check_bolt(configs.pop('boltDirectory'))
@@ -110,6 +124,7 @@ def main():
 
 
     else:
+        in_transform = args.INT
         covars = args.cov_cols
         qcovars = args.qcov_cols
         bolt = check_bolt(args.bolt)
@@ -144,6 +159,20 @@ def main():
         if not args.ldscores:
             configs['LDscoresFile'] = join(bolt, 'tables', 'LDSCORE.1000G_EUR.tab.gz')
 
+    
+    if in_transform in ['marginal', 'adjusted']:
+        dfa = inverse_rank_transform(
+                configs['phenoFile'],
+                cov_fn=configs['covarFile'],
+                covars=covars,
+                qcovars=qcovars,
+                method=in_transform,
+                )
+        tmp_dir = 'tmp'
+        os.makedirs(tmp_dir, exist_ok=True)
+        fn = join(tmp_dir, configs['phenoFile'].split('/')[-1].split('.')[0] + f'_INT_{in_transform}.txt')
+        dfa.to_csv(fn, sep=' ', index=False)
+        configs['phenoFile'] = fn
 
     pcs = range(first, last+1)
     os.makedirs(out_dir, exist_ok=True)
@@ -156,6 +185,65 @@ def main():
             configs['statsFileBgenSnps'] = join(out_dir, out_imp % pc)
 
         run_single_bolt(bolt, flags, covars, qcovars, remove, log_file, **configs)
+
+def inverse_rank_transform(inp_fn, cov_fn=None, covars=None, qcovars=None, method='adjusted'):
+    df = pd.read_csv(inp_fn, sep=' ')
+    pcs = range(df.shape[1]-2)
+    if method == 'adjusted':
+        cov = pd.read_csv(cov_fn, sep=' ')
+        cov.index = cov.IID
+        cov = cov.loc[df.IID]
+        cov = prep_covars(cov, covars, qcovars)
+
+        df_adj = df.copy()
+
+        for pc in tqdm(pcs):
+            col = f'PC_{pc}'
+            lr = LinearRegression()
+            df_adj[col] = df[col] - lr.fit(cov, df[col]).predict(cov)
+        df = df_adj
+    for pc in tqdm(pcs):
+        col = f'PC_{pc}'
+        df[col] = INT(df[col])
+    return df
+
+def prep_covars(cov, covars, qcovars):
+    '''prepare covars for adjustment in INT'''
+    tmp_covars = []
+    for col in covars:
+        if '{' in col and '}' in col and ':' in col:
+            pre, (mid, post) = col.split('{')[0], col.split('{')[1].split('}')
+            lo, hi = [int(x) for x in mid.split(':')]
+            for l in range(lo, hi+1):
+                tmp_covars.append(pre+str(l)+post)
+        else:
+            tmp_covars.append(col)
+
+    tmp_qcovars = []
+    for col in qcovars:
+        if '{' in col and '}' in col and ':' in col:
+            pre, (mid, post) = col.split('{')[0], col.split('{')[1].split('}')
+            lo, hi = [int(x) for x in mid.split(':')]
+            for l in range(lo, hi+1):
+                tmp_qcovars.append(pre+str(l)+post)
+        else:
+            tmp_qcovars.append(col)
+    cov = cov[tmp_covars + tmp_qcovars]
+    le = OneHotEncoder(sparse=False, drop='first')
+    for covar in tmp_covars:
+        L = le.fit_transform(cov[covar].values.reshape(-1, 1))
+        L = L.reshape(len(L), -1)
+        cov.drop(covar, axis=1, inplace=True)
+        cov.loc[:, [f'{covar}_{i}' for i in range(L.shape[1])]] = L
+    return cov
+
+def INT(x, method='average', c=3./8):
+    '''perform rank-based inverse normal transform'''
+    r = stats.rankdata(x, method=method)
+    x = (r - c) / (len(x) - 2*c + 1)
+    norm = stats.norm.ppf(x)
+    return norm
+
 
 def check_bolt(pth):
     if not pth:
