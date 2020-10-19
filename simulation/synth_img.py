@@ -22,7 +22,7 @@ from stylegan2_pytorch.stylegan2_pytorch import image_noise
 # import toml
 
 from util import LATENT_DIR, get_latent_bolt, IMG_DIR, get_img_dir
-# torch.set_num_threads(2)
+torch.set_num_threads(2)
 
 
 # CONFIG = toml.load('config.toml')
@@ -51,6 +51,7 @@ os.makedirs(IMG_DIR, exist_ok=True)
 # LATENT_PKL_TEMPL = 'exp_var%.3f_nc%d_seed%d.pkl'
 
 def main():
+    torch.set_num_threads(2)
     parser = argparse.ArgumentParser()
     # parser.add_argument('--debug', dest='debug', action='store_true')
 
@@ -140,10 +141,8 @@ def synthesize_gwas_data(
     if same_noise:
         N = image_noise(1, img_size)
 
-    out_img_dir = join(IMG_DIR, get_img_dir(name, exp_var, n_causal, mult_scale, seed))
-    if os.path.isdir(out_img_dir):
-        shutil.rmtree(out_img_dir)
-    os.mkdir(out_img_dir)
+    out_img_dir = get_img_dir(name, exp_var, n_causal, mult_scale, seed)
+    os.makedirs(out_img_dir, exist_ok=True)
 
     for i, lat in tqdm(latent.iterrows(), total=len(latent)):
         if not same_noise:

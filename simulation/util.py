@@ -33,7 +33,7 @@ def get_out(
         seed,
         sample_size,
         ):
-    out_templ = 'exp_%s_var%.3f_nc%d_sc%.2f_%s_%s_%s_s%d_%s_seed%d_ss%d_pheno_%s'
+    out_templ = 'exp_%s_var%.3f_nc%d_sc%.2f_%s_%s_%s_s%d_%s_seed%d_ss%d_pheno_%s.txt'
     return out_templ % (
             gan_name,
             exp_var,

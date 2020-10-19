@@ -177,8 +177,8 @@ def simulation_stage_3(
 def simulation_stage_4(
         bed,
         fam,
-        cov='../run_gwas/covariates.txt',
-        bolt='../run_gwas/BOLT-LMM_v2.3.4/',
+        cov='../run_lmm/covariates.txt',
+        bolt='../run_lmm/BOLT-LMM_v2.3.4/',
         first_pc=0,
         last_pc=9,
         threads=30,

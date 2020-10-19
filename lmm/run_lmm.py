@@ -170,7 +170,8 @@ def main():
                 )
         tmp_dir = 'tmp'
         os.makedirs(tmp_dir, exist_ok=True)
-        fn = join(tmp_dir, configs['phenoFile'].split('/')[-1].split('.')[0] + f'_INT_{in_transform}.txt')
+        # fn = join(tmp_dir, configs['phenoFile'].split('/')[-1].split('.')[0] + f'_INT_{in_transform}.txt')
+        fn = join(tmp_dir, '.'.join(configs['phenoFile'].split('/')[-1].split('.')[:-1]) + f'_INT_{in_transform}.txt')
         dfa.to_csv(fn, sep=' ', index=False)
         configs['phenoFile'] = fn
 
@@ -180,7 +181,7 @@ def main():
     for pc in pcs:
         configs['phenoCol'] = f'PC_{pc}'
         configs['statsFile'] = join(out_dir, out_fn % pc)
-        log_file = join(out_dir, 'log', f'PC_{pc}.log')
+        log_file = join(out_dir, 'log', out_fn % pc + '.log') #f'PC_{pc}.log')
         if run_imputed:
             configs['statsFileBgenSnps'] = join(out_dir, out_imp % pc)
 

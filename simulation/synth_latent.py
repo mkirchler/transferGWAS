@@ -65,7 +65,8 @@ def main():
     #     chromos = range(1, 23)
 
     # TODO change back
-    chromos = range(21, 23)
+    # chromos = range(21, 23)
+    chromos = range(1, 23)
     # config = dict(
     #         chromos=chromos,
     #         normalize=args.normalize,
@@ -120,7 +121,9 @@ def load_bed(geno_temp, chromo=1, indiv=None, mid_buffer=2e6):
     eff_snps, null_snps (np.ndarray): array of ints with position of effect- and null-SNPs
     rsid (np.ndarray) array of str with rsid names of SNPs in G
     '''
+    print(chromo)
     bed = PyPlink(geno_temp % chromo)
+    print(bed.get_nb_markers())
     fam = bed.get_fam()
     if indiv is None:
         indiv = fam.iid.astype(int)
@@ -132,17 +135,29 @@ def load_bed(geno_temp, chromo=1, indiv=None, mid_buffer=2e6):
 
     G = []
     rsids = []
+    removed = 0
     for g in tqdm(bed.iter_geno(), total=bed.get_nb_markers()):
-        G.append(g[1][ind])
-        rsids.append(g[0])
+        rs = g[0]
+        gen = g[1][ind]
+        g_ind = gen == -1
+        if g_ind.mean() < 0.1:
+            # gen = gen.astype(float)
+            gen[g_ind] = gen[~g_ind].mean()
+            G.append(gen)
+            rsids.append(rs)
+        else:
+            removed += 1
+    print(f'removed {removed} SNPs due to missing>10%')
+        # G.append(g[1][ind])
+        # rsids.append(g[0])
 
     G = pd.DataFrame(
             np.array(G).T,
             index=indiv,
-            columns=['c%d:%d'%(chromo, x) for x in range(bed.get_nb_markers())],
+            columns=['c%d:%d'%(chromo, x) for x in range(len(rsids))],
             )
 
-    bim = bed.get_bim()
+    bim = bed.get_bim().loc[rsids]
     mid = bim.pos.min() + (bim.pos.max()  - bim.pos.min()) // 2
     eff_snps = np.where(bim.pos < mid - mid_buffer)[0]
     null_snps = np.where(bim.pos > mid + mid_buffer)[0]
@@ -173,6 +188,7 @@ def simulate_full_data(
     '''
     Gs, effs, nulls, rsids = [], [], [], []
     ind = 0
+    print('loading genotype data...')
     for chromo in chromos:
         G, eff, null, rsid = load_bed(geno_temp, chromo=chromo, indiv=indiv)
         Gs.append(G)
@@ -185,6 +201,7 @@ def simulate_full_data(
     eff = np.concatenate(effs)
     null = np.concatenate(nulls)
     rsid = np.concatenate(rsids)
+    print('simulating latent code...')
     pheno, causal, W, ge, ne = simulate_pheno(
             G,
             eff,
