@@ -2,11 +2,13 @@
 import sys
 import os
 from os.path import join
+import uuid
 import argparse
 from subprocess import Popen, PIPE, STDOUT
 import requests
 import tarfile
 
+import numpy as np
 import pandas as pd
 from scipy import stats
 from sklearn.linear_model import LinearRegression
@@ -171,7 +173,7 @@ def main():
         tmp_dir = 'tmp'
         os.makedirs(tmp_dir, exist_ok=True)
         # fn = join(tmp_dir, configs['phenoFile'].split('/')[-1].split('.')[0] + f'_INT_{in_transform}.txt')
-        fn = join(tmp_dir, '.'.join(configs['phenoFile'].split('/')[-1].split('.')[:-1]) + f'_INT_{in_transform}.txt')
+        fn = join(tmp_dir, '.'.join(configs['phenoFile'].split('/')[-1].split('.')[:-1]) + f'_INT_{in_transform}_{uuid.uuid4()}.txt')
         dfa.to_csv(fn, sep=' ', index=False)
         configs['phenoFile'] = fn
 
@@ -195,6 +197,11 @@ def inverse_rank_transform(inp_fn, cov_fn=None, covars=None, qcovars=None, metho
         cov.index = cov.IID
         cov = cov.loc[df.IID]
         cov = prep_covars(cov, covars, qcovars)
+
+        df.index = df.IID
+        ind = np.intersect1d(cov.index, df.index)
+        cov = cov.loc[ind]
+        df = df.loc[ind]
 
         df_adj = df.copy()
 
@@ -236,7 +243,7 @@ def prep_covars(cov, covars, qcovars):
         L = L.reshape(len(L), -1)
         cov.drop(covar, axis=1, inplace=True)
         cov.loc[:, [f'{covar}_{i}' for i in range(L.shape[1])]] = L
-    return cov
+    return cov.dropna()
 
 def INT(x, method='average', c=3./8):
     '''perform rank-based inverse normal transform'''
