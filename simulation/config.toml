@@ -4,18 +4,17 @@
 ## GENERAL SIMULATION SETTINGS
 
 # random seeds for different simulations
-# seeds = [3156, 9432, 6458, 5308, 6748, 5479, 5487, 3762, 5748, 5265]
-seeds = [3156]
+seeds = [3156, 9432, 6458, 5308, 6748, 5479, 5487, 3762, 5748, 5265]
 
 # ratio of explained variance of genetic data of the latent code
-exp_vars = [0.7]
+exp_vars = [0.5, 0.7]
 
 # number of causal SNPs in simulation over the whole (first-halves) of the genome
 # accepts only ints, not lists of ints
 n_causal = 1250
 
 # will create synthetic images for all, and then subsample using sample-sizes
-sample_sizes = [46731]
+sample_sizes = [6000, 12000, 24000, 46731]
 
 
 ## LATENT SPACE CODES:
@@ -29,7 +28,7 @@ fam = "path/to/bed/chr1.fam"
 normalize = true
 # optional subset of  individuals
 # leave empty or provide file with space-separated values with FID and IID column (no header)
-indiv = ""
+indiv = "../reproducibility/indiv.txt"
 
 
 ## SYNTHETIC IMAGES
@@ -67,7 +66,7 @@ layers = ["L4"]
 
 # run BOLT-LMM on all dimension from first_pc to last_pc (last_pc needs to be < n_pcs)
 first_pc = 0
-last_pc = 1
+last_pc = 9
 # covariates to adjust for; space separated, as in main GWAS (see there for details); required
 cov = "../lmm/covariates.txt"
 cov_columns = ['sex', 'assessment_center', 'geno_batch']
