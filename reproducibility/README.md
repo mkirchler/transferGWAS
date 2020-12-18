@@ -34,3 +34,7 @@ Use `../feature_condensation/feature_condensation.py` with `both.csv` as input (
 ### Step 3 - BOLT-LMM association analysis
 
 In `../lmm/`, fill out the `config.toml` file (especially the `.bed` and optionally `.bgen` files) and then run the `run_lmm.py` script.
+
+### Simulation study
+
+The simulation study can be run using the code in `../simulation/`. Trained weights for the StyleGAN2 will also be downloaded wih `../download_models.sh`.
