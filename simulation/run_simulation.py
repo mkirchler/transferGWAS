@@ -5,10 +5,13 @@ import toml
 
 import pandas as pd
 import numpy as np
+from eval_simulation import eval_simulation
+
 
 from util import EMB_DIR, OUT_DIR, \
         PATH_TO_EXPORT, PATH_TO_GWAS, \
-        get_out, get_img_dir, get_emb
+        get_out, get_img_dir, get_emb, \
+        get_aggregate_fn
 
 
 def main():
@@ -51,6 +54,9 @@ def main():
     if 4 in stages:
         print('running stage 4...')
         simulation_stage_4(**configs, verbose=verbose)
+    if 5 in stages:
+        print('aggregating results...')
+        simulation_stage_5(**configs, verbose=verbose)
 
 
 def simulation_stage_1(
@@ -195,7 +201,6 @@ def simulation_stage_4(
         tfms='tta',
         n_pcs=50,
         model='resnet50',
-        pretraining='imagenet',
         spatial='mean',
         size=448,
         layers=['L4'],
@@ -293,6 +298,49 @@ def simulation_stage_4(
                         process = Popen(cmd, stdout=PIPE, stderr=PIPE)
                     stdout, stderr = process.communicate()
 
+def simulation_stage_5(
+        n_causal=1250,
+        exp_vars=[0.5],
+        seeds=[123],
+        sample_sizes=[25000],
+        mult_scale=2.0,
+        gan_name='stylegan2_healthy',
+        tfms='tta',
+        n_pcs=10,
+        model='resnet50',
+        spatial='mean',
+        size=448,
+        layers=['L4'],
+        verbose=True,
+        **kwargs,
+        ):
+    for layer in layers:
+        fn = get_aggregate_fn(
+                gan_name,
+                n_causal,
+                mult_scale,
+                model.split('.')[0],
+                layer,
+                spatial,
+                size,
+                tfms,
+                )
+        df = eval_simulation(
+            gan_name=gan_name,
+            exp_vars=exp_vars,
+            n_causal=n_causal,
+            mult_scale=mult_scale,
+            model=model,
+            layer=layer,
+            size=size,
+            tfms=tfms,
+            spatial=spatial,
+            sample_sizes=sample_sizes,
+            seeds=seeds,
+            pcs=range(n_pcs),
+            thres=5e-8,
+            )
+        df.to_csv(fn+'tresh5e-8.csv', index=False)
 
 if __name__ == '__main__':
     main()

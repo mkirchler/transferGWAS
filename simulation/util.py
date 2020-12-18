@@ -19,6 +19,27 @@ def get_latent_bolt(exp_var, n_causal, seed):
     latent_bolt_templ = 'exp_var%.3f_nc%d_seed%d.txt'
     return latent_bolt_templ % (exp_var, n_causal, seed)
 
+def get_aggregate_fn(
+            gan_name,
+            n_causal,
+            mult_scale,
+            model_name,
+            layer,
+            spatial,
+            img_size,
+            tfms,
+            ):
+    agg_templ = f'simulation_results_%s_nc%d_sc%.2f_%s_%s_%s_s%d_%s.csv'
+    return agg_templ % (
+            gan_name,
+            n_causal,
+            mult_scale,
+            model_name,
+            layer,
+            spatial,
+            img_size,
+            tfms,
+            )
 
 def get_out(
         gan_name,
