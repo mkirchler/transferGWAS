@@ -1,6 +1,6 @@
-# Multi-task training of Diabetic Retinopathy
+# Multi-task training on EyePACS dataset
 
-This directory contains all the code for the EyePACs pretraining task. We provide the trained models (see TODO), but you can use this code to retrain the model. You can also use the code to train on your own data, but since different imaging data sets usually require different preprocessing steps and hyperparameters, we would recommend using these scripts only for retinal fundus images with continuous target variable.
+This directory contains all the code for the EyePACs pretraining task. We provide the trained models (use `../download_models.sh`), but you can use this code to retrain the model. You can also use the code to train on your own data, but since different imaging data sets usually require different preprocessing steps and hyperparameters, we would recommend using these scripts only for retinal fundus images with continuous target variable.
 
 ## Data preprocessing
 
