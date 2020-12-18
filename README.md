@@ -8,7 +8,7 @@ transferGWAS is a method for performing genome-wide association studies on whole
 
 * **`lmm`:** this part is a wrapper for the BOLT-LMM association analysis, including some basic preprocessing steps. If you have experience with running GWAS, you maybe won't need this part.
 
-* **models:** here you can find our pretrained models (only after you downloaded them via `./download_models.sh`)
+* **`models`:** here you can find our pretrained models (only after you downloaded them via `./download_models.sh`)
 
 * **`simulation`:** This is the code for the simulation study.
 
@@ -16,6 +16,8 @@ transferGWAS is a method for performing genome-wide association studies on whole
 
 
 ## Getting started
+
+This repository requires bash and was written and tested on Ubuntu 18.04.4 LTS. However, all code should also work under Windows (might potentially need some adjustments for the very few small bash-scripts).
 
 Start by cloning this repo:
 ```bash

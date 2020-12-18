@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # TODO fill in the path to your plink2 install, if not in global path
 # alias plink2=/path/to/plink2
 
