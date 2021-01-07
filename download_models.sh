@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # EyePACS Resnet50
 if [ ! -d models ]; then
     mkdir models
