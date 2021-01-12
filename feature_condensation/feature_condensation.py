@@ -10,7 +10,6 @@ from tqdm import tqdm
 
 from sklearn.decomposition import PCA
 
-# TODO requires torch.__version__ >= 1.6 (or >= 1.5, but definitely > 1.4)
 import torch
 from torch.utils.data.dataset import Dataset
 from torchvision import transforms, models
