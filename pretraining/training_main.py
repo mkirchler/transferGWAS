@@ -146,8 +146,6 @@ def train(
             steps_per_epoch=steps_per_epoch
             )
 
-    # if start_from > 1:
-    #     model, configs, opt, scheduler = load_states(model, configs, opt, scheduler, epoch=start_from, dev=dev)
     start_from = 1
 
     best_loss = np.inf
@@ -165,38 +163,11 @@ def train(
         s = '\t'.join([('%s: %.4f' % (dic['name'], loss)) for dic, loss in zip(configs, valid_losses)])
 
         print(f'validation losses:\n\t{s}\n')
-        # save_states(model, configs, opt, scheduler, epoch=epoch+1)
         if best_loss > valid_losses[0]:
             print(f'updating model: last best loss: {best_loss:.3f}, new best loss: {valid_losses[0]:.3f}')
             best_loss = valid_losses[0]
             torch.save(model.r.state_dict(), save_path)
     return model, configs
-
-
-# def save_states(model, configs, opt, scheduler, epoch=1):
-#     param = {
-#             'model_sd': model.state_dict(),
-#             'opt': opt.state_dict(),
-#             'sched': scheduler.state_dict(),
-#             }
-#     for i, dic in enumerate(configs):
-#         param[f'head_{i}_sd'] = dic['head'].state_dict()
-
-#     torch.save(param, f'models/states{epoch}_dr.tar')
-
-
-# def load_states(model, configs, opt, scheduler, epoch=1, dev='cpu'):
-#     param = torch.load(f'models/states{epoch}_dr.tar', map_location='cpu')
-#     model.load_state_dict(param['model_sd'])
-#     model = model.to(dev)
-#     for i, dic in enumerate(configs):
-#         dic['head'].load_state_dict(param[f'head_{i}_sd'])
-#         dic['head'] = dic['head'].to(dev)
-
-#     opt.load_state_dict(param['opt'])
-#     scheduler.load_state_dict(param['sched'])
-
-#     return model, configs, opt, scheduler
 
 
 def train_one_epoch(model, configs, opt, scheduler=None, dev='cuda:0'):

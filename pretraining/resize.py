@@ -1,14 +1,15 @@
 import warnings
-import argparse
-
 import os
 from os.path import join
-from tqdm import tqdm
+import argparse
 from glob import glob
+
+from tqdm import tqdm
+
+import PIL
 
 from torchvision import transforms
 
-import PIL
 
 
 warnings.filterwarnings('ignore', category=UserWarning)
