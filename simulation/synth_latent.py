@@ -50,6 +50,7 @@ def main():
     parser.add_argument('--exp_var', dest='exp_var', default=0.5, type=float)
     parser.add_argument('--normalize', dest='normalize', action='store_true')
     parser.add_argument('--seed', dest='seed', default=123, type=int)
+    parser.add_argument('--mid_buffer', dest='mid_buffer', default=int(2e6), type=int)
     parser.add_argument('--indiv', dest='indiv', default='indiv.txt', type=str)
     # parser.add_argument('--param_select', dest='param_select', action='store_true')
     # parser.add_argument('--debug', dest='debug', action='store_true')
@@ -89,6 +90,7 @@ def main():
             normalize=args.normalize,
             n_causal=args.n_causal,
             exp_var=args.exp_var,
+            mid_buffer=args.mid_buffer,
             seed=args.seed,
             )
 
@@ -172,6 +174,7 @@ def simulate_full_data(
         n_pheno=512,
         n_causal=100,
         exp_var=0.5,
+        mid_buffer=2e6,
         seed=123,
         ):
     '''create simulated phenotype
@@ -184,13 +187,14 @@ def simulate_full_data(
     n_pheno (int): dimensionality of output phenotype
     n_causal (int): number of causal SNPs
     exp_var (float in [0, 1]): percentage of explained variance by causal SNPs
+    mid_buffer (int): how much space to keep before and after midpoint of chromosomes to effect/null snps
     seed (int or None): random seed
     '''
     Gs, effs, nulls, rsids = [], [], [], []
     ind = 0
     print('loading genotype data...')
     for chromo in chromos:
-        G, eff, null, rsid = load_bed(geno_temp, chromo=chromo, indiv=indiv)
+        G, eff, null, rsid = load_bed(geno_temp, chromo=chromo, indiv=indiv, mid_buffer=mid_buffer)
         Gs.append(G)
         effs.append(eff+ind)
         nulls.append(null+ind)

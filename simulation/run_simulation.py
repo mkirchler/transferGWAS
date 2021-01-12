@@ -66,6 +66,7 @@ def simulation_stage_1(
         exp_vars=[0.5],
         normalize=True,
         seeds=[123],
+        mid_buffer=2e6,
         verbose=False,
         **kwargs,
         ):
@@ -78,12 +79,13 @@ def simulation_stage_1(
             config += f'--n_causal {n_causal}'.split()
             config += f'--exp_var {exp_var}'.split()
             config += f'--seed {seed}'.split()
+            config += f'--mid_buffer {mid_buffer:.0f}'.split()
             if indiv:
                 config += f'--indiv {indiv}'.split()
             if normalize:
                 config += [f'--normalize']
 
-            cmd = ['python', 'synth_latent.py'] + config
+            cmd = ['python', '../simulation/synth_latent.py'] + config
             print(cmd)
             if verbose:
                 process = Popen(cmd)
@@ -117,7 +119,7 @@ def simulation_stage_2(
             if diff_noise:
                 config += [f'--diff_noise']
 
-            cmd = ['python', 'synth_img.py'] + config
+            cmd = ['python', '../simulation/synth_img.py'] + config
             if verbose:
                 process = Popen(cmd)
             else:
