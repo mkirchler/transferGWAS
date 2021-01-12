@@ -77,9 +77,6 @@ def main():
     parser.add_argument('--out_fn', type=str, default='PC_%d.txt', help='output filename; should include a `%d` for the PC')
     parser.add_argument('--bolt', type=str, help='path to BOLT-LMM directory. If none specified, will try to download bolt-lmm to `bolt/`')
     parser.add_argument('--threads', default=130, type=int, help='how many threads to use for BOLT-LMM')
-    # parser.add_argument('--maf', default=0.001, type=float, help='Minor allele frequency in microarray data.')
-    # parser.add_argument('--ldr2', default=0.8, type=float, help='R^2 for LD-pruning of microarray SNPs.')
-    # parser.add_argument('--hwe', default=0.00001, type=float, help='Hardy-Weinberg p-value for microarray data')
     parser.add_argument('--max_missing_snp', default=0.1, type=float, help='maximum missingness per SNP')
     parser.add_argument('--max_missing_indiv', default=0.1, type=float, help='maximum missingness per individual')
     parser.add_argument('--ref_map', type=str, help='Alternative genome reference map. If none specified, will use GRCh37/hg19 map from BOLT-LMM')
@@ -172,7 +169,6 @@ def main():
                 )
         tmp_dir = 'tmp'
         os.makedirs(tmp_dir, exist_ok=True)
-        # fn = join(tmp_dir, configs['phenoFile'].split('/')[-1].split('.')[0] + f'_INT_{in_transform}.txt')
         fn = join(tmp_dir, '.'.join(configs['phenoFile'].split('/')[-1].split('.')[:-1]) + f'_INT_{in_transform}_{uuid.uuid4()}.txt')
         dfa.to_csv(fn, sep=' ', index=False)
         configs['phenoFile'] = fn
@@ -183,11 +179,12 @@ def main():
     for pc in pcs:
         configs['phenoCol'] = f'PC_{pc}'
         configs['statsFile'] = join(out_dir, out_fn % pc)
-        log_file = join(out_dir, 'log', out_fn % pc + '.log') #f'PC_{pc}.log')
+        log_file = join(out_dir, 'log', out_fn % pc + '.log')
         if run_imputed:
             configs['statsFileBgenSnps'] = join(out_dir, out_imp % pc)
 
         run_single_bolt(bolt, flags, covars, qcovars, remove, log_file, **configs)
+
 
 def inverse_rank_transform(inp_fn, cov_fn=None, covars=None, qcovars=None, method='adjusted'):
     df = pd.read_csv(inp_fn, sep=' ')
@@ -214,6 +211,7 @@ def inverse_rank_transform(inp_fn, cov_fn=None, covars=None, qcovars=None, metho
         col = f'PC_{pc}'
         df[col] = INT(df[col])
     return df
+
 
 def prep_covars(cov, covars, qcovars):
     '''prepare covars for adjustment in INT'''
@@ -245,6 +243,7 @@ def prep_covars(cov, covars, qcovars):
         cov.loc[:, [f'{covar}_{i}' for i in range(L.shape[1])]] = L
     return cov.dropna()
 
+
 def INT(x, method='average', c=3./8):
     '''perform rank-based inverse normal transform'''
     r = stats.rankdata(x, method=method)
@@ -270,7 +269,6 @@ def check_bolt(pth):
 
 
 def run_single_bolt(bolt, flags, covars, qcovars, remove, log_file, **kwargs):
-
     config = sum([[f'--{key}', f'{value}'] for key, value in kwargs.items()], [])
     for c in covars: config += ['--covarCol', c]
     for q in qcovars: config += ['--qCovarCol', q]
@@ -286,15 +284,7 @@ def run_single_bolt(bolt, flags, covars, qcovars, remove, log_file, **kwargs):
         for line in p.stdout:
             sys.stdout.buffer.write(line)
             f.write(line)
-    # process = Popen(cmd, stdout=PIPE)
-    # stdout, stderr = process.communicate()
-    # print('stdout:')
-    # print(stdout)
-
-    # print('stderr:')
-    # print(stderr)
 
 
 if __name__ == '__main__':
-    # pass
     main()
