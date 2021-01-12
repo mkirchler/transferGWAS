@@ -1,10 +1,12 @@
 from os.path import join
 import argparse
 from subprocess import Popen, PIPE
-import toml
 
 import pandas as pd
 import numpy as np
+
+import toml
+
 from eval_simulation import eval_simulation
 
 
@@ -147,10 +149,6 @@ def simulation_stage_3(
     for seed in seeds:
         for exp_var in exp_vars:
             img_csv = get_img_dir(gan_name, exp_var, n_causal, mult_scale, seed) + '.csv'
-            # img_csv = join(
-            #         IMG_DIR,
-            #         IMG_DIR_TEMPL % (gan_name, exp_var, n_causal, mult_scale, seed),
-            #         ) + '.csv'
             emb = get_emb(
                     gan_name,
                     exp_var,
@@ -171,7 +169,6 @@ def simulation_stage_3(
             config += f'--n_pcs {n_pcs}'.split()
             config += f'--model {model}'.split()
             config += f'--pretraining {pretraining}'.split()
-            #config += f'--layer {layer}'.split()
             config += ['--layer'] + layers
 
             cmd = ['python', PATH_TO_EXPORT, img_csv, EMB_DIR] + config
