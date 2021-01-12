@@ -21,7 +21,7 @@ sample_sizes = [6000, 12000, 24000, 46731]
 
 # path to bed-files (no file-extension)
 # files should be split by chromosomes, and chromosome number should be indicated by `%s`
-bed = "path/to/bed/chr%s.bed"
+bed = "path/to/bed/chr%s"
 # single .fam needs to be specified alone
 fam = "path/to/bed/chr1.fam"
 # normalize genetic matrix before simulation
