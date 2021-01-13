@@ -33,10 +33,10 @@ outputFn = 'PC_%d.txt'
 outputFnImp = 'PC_%d.imp.txt'
 
 # keep empty to automatically download into new directory "BOLT-LMM_v2.3.4"
-boltDirectory = ""
+boltDirectory = "../"
 # adjust if using different location,  different map or individuals with different ancestry
-geneticMapFile = "BOLT-LMM_v2.3.4/tables/genetic_map_hg19_withX.txt.gz"
-LDscoresFile = "BOLT-LMM_v2.3.4/tables/LDSCORE.1000G_EUR.tab.gz"
+geneticMapFile = "../BOLT-LMM_v2.3.4/tables/genetic_map_hg19_withX.txt.gz"
+LDscoresFile = "../BOLT-LMM_v2.3.4/tables/LDSCORE.1000G_EUR.tab.gz"
 
 # file or list of files with IID to remove from analysis
 remove = ""

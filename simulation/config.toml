@@ -73,7 +73,7 @@ cov_columns = ['sex', 'assessment_center', 'geno_batch']
 qcov_columns = ['age', 'genet_PC_{1:10}']
 threads = 30
 # only change if you have already downloaded BOLT-LMM to another location
-bolt='../lmm/BOLT-LMM_v2.3.4/'
+bolt='../BOLT-LMM_v2.3.4/'
 # leave empty for default hg19 map
 ref_map = ""
 # leave empty for default 1000G European ancestry LDScores
