@@ -6,10 +6,15 @@ channels:
 dependencies:
   - _libgcc_mutex=0.1=main
   - blas=1.0=mkl
-  - ca-certificates=2020.7.22=0
-  - certifi=2020.6.20=py36_0
+  - brotlipy=0.7.0=py36h27cfd23_1003
+  - ca-certificates=2020.12.8=h06a4308_0
+  - certifi=2020.12.5=py36h06a4308_0
+  - cffi=1.14.4=py36h261ae71_0
+  - chardet=4.0.0=py36h06a4308_1003
+  - cryptography=3.3.1=py36h3c74f83_0
   - cudatoolkit=10.2.89=hfd86e86_1
   - freetype=2.10.2=h5ab3b9f_0
+  - idna=2.10=py_0
   - intel-openmp=2020.2=254
   - joblib=0.16.0=py_0
   - jpeg=9b=h024ee3a_2
@@ -32,15 +37,19 @@ dependencies:
   - numpy=1.19.1=py36hbc911f0_0
   - numpy-base=1.19.1=py36hfa32c7d_0
   - olefile=0.46=py36_0
-  - openssl=1.1.1h=h7b6447c_0
+  - openssl=1.1.1i=h27cfd23_0
   - pandas=1.1.1=py36he6710b0_0
   - pillow=7.2.0=py36hb39fc2d_0
   - pip=20.2.2=py36_0
+  - pycparser=2.20=py_2
+  - pyopenssl=20.0.1=pyhd3eb1b0_1
+  - pysocks=1.7.1=py36h06a4308_0
   - python=3.6.12=hcff3b4d_2
   - python-dateutil=2.8.1=py_0
   - pytorch=1.6.0=py3.6_cuda10.2.89_cudnn7.6.5_0
   - pytz=2020.1=py_0
   - readline=8.0=h7b6447c_0
+  - requests=2.25.1=pyhd3eb1b0_0
   - scikit-learn=0.23.2=py36h0573a6f_0
   - scipy=1.5.2=py36h0b6359f_0
   - setuptools=49.6.0=py36_0
@@ -50,6 +59,7 @@ dependencies:
   - tk=8.6.10=hbc83047_0
   - torchvision=0.7.0=py36_cu102
   - tqdm=4.49.0=py_0
+  - urllib3=1.26.2=pyhd3eb1b0_0
   - wheel=0.35.1=py_0
   - xz=5.2.5=h7b6447c_0
   - zlib=1.2.11=h7b6447c_3
