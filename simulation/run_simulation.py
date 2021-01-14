@@ -69,6 +69,7 @@ def simulation_stage_1(
         normalize=True,
         seeds=[123],
         mid_buffer=2e6,
+        wdir='.',
         verbose=False,
         **kwargs,
         ):
@@ -82,6 +83,7 @@ def simulation_stage_1(
             config += f'--exp_var {exp_var}'.split()
             config += f'--seed {seed}'.split()
             config += f'--mid_buffer {mid_buffer:.0f}'.split()
+            config += f'--wdir {wdir}'.split()
             if indiv:
                 config += f'--indiv {indiv}'.split()
             if normalize:
@@ -105,6 +107,7 @@ def simulation_stage_2(
         seeds=[123],
         verbose=True,
         psi=0.4,
+        wdir='.',
         **kwargs,
         ):
     '''run synthesis of images from latent codes'''
@@ -118,6 +121,7 @@ def simulation_stage_2(
             config += f'--mult_scale {mult_scale:.3f}'.split()
             config += f'--seed {seed}'.split()
             config += f'--models_dir {stylegan2_models}'.split()
+            config += f'--wdir {wdir}'.split()
             if diff_noise:
                 config += [f'--diff_noise']
 
@@ -143,12 +147,13 @@ def simulation_stage_3(
         size=448,
         layers=['L4'],
         verbose=False,
+        wdir='.',
         **kwargs,
         ):
     '''condense synthetic images to low-dimensional embeddings'''
     for seed in seeds:
         for exp_var in exp_vars:
-            img_csv = get_img_dir(gan_name, exp_var, n_causal, mult_scale, seed) + '.csv'
+            img_csv = join(wdir, get_img_dir(gan_name, exp_var, n_causal, mult_scale, seed) + '.csv')
             emb = get_emb(
                     gan_name,
                     exp_var,
@@ -171,7 +176,7 @@ def simulation_stage_3(
             config += f'--pretraining {pretraining}'.split()
             config += ['--layer'] + layers
 
-            cmd = ['python', PATH_TO_EXPORT, img_csv, EMB_DIR] + config
+            cmd = ['python', PATH_TO_EXPORT, img_csv, join(wdir, EMB_DIR)] + config
             if verbose:
                 process = Popen(cmd)
             else:
@@ -204,6 +209,7 @@ def simulation_stage_4(
         size=448,
         layers=['L4'],
         verbose=True,
+        wdir='.',
         **kwargs,
         ):
     '''run GWAS on embeddings'''
@@ -212,6 +218,7 @@ def simulation_stage_4(
             for sample_size in sample_sizes:
                 for layer in layers:
                     emb = join(
+                            wdir,
                             EMB_DIR,
                             get_emb(
                                 gan_name,
@@ -228,6 +235,7 @@ def simulation_stage_4(
                                 )
                             )
                     remove_fn_sample = join(
+                            wdir,
                             EMB_DIR,
                             get_emb(
                                 gan_name,
@@ -245,18 +253,18 @@ def simulation_stage_4(
                             )
 
                     out_fn = get_out(
-                            gan_name,
-                            exp_var,
-                            n_causal,
-                            mult_scale,
-                            model.split('.')[0],
-                            layer,
-                            spatial,
-                            size,
-                            tfms,
-                            seed,
-                            sample_size,
-                        )
+                                    gan_name,
+                                    exp_var,
+                                    n_causal,
+                                    mult_scale,
+                                    model.split('.')[0],
+                                    layer,
+                                    spatial,
+                                    size,
+                                    tfms,
+                                    seed,
+                                    sample_size,
+                            )
                     embeddings = pd.read_csv(emb, sep=' ').loc[:, 'IID']
                     sample = embeddings.sample(sample_size, random_state=seed)
                     remove_iid = [x for x in embeddings.values if x not in sample.values]
@@ -277,7 +285,7 @@ def simulation_stage_4(
                     config += f'--emb {emb}'.split()
                     config += f'--first_pc {first_pc}'.split()
                     config += f'--last_pc {last_pc}'.split()
-                    config += f'--out_dir {OUT_DIR}'.split()
+                    config += f'--out_dir {join(wdir, OUT_DIR)}'.split()
                     config += f'--out_fn {out_fn}'.split()
                     config += f'--bolt {bolt}'.split()
                     config += f'--threads {threads}'.split()
@@ -311,19 +319,23 @@ def simulation_stage_5(
         size=448,
         layers=['L4'],
         verbose=True,
+        wdir='.',
         **kwargs,
         ):
     for layer in layers:
-        fn = get_aggregate_fn(
-                gan_name,
-                n_causal,
-                mult_scale,
-                model.split('.')[0],
-                layer,
-                spatial,
-                size,
-                tfms,
-                )
+        fn = join(
+                wdir,
+                get_aggregate_fn(
+                    gan_name,
+                    n_causal,
+                    mult_scale,
+                    model.split('.')[0],
+                    layer,
+                    spatial,
+                    size,
+                    tfms,
+                ),
+            )
         df = eval_simulation(
             gan_name=gan_name,
             exp_vars=exp_vars,

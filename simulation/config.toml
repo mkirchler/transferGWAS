@@ -16,6 +16,9 @@ n_causal = 1250
 # will create synthetic images for all, and then subsample using sample-sizes
 sample_sizes = [6000, 12000, 24000, 46731]
 
+# working directory (where everything will be saved)
+wdir = '.'
+
 
 ## LATENT SPACE CODES:
 

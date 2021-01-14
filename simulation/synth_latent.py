@@ -12,7 +12,6 @@ from pyplink import PyPlink
 
 from util import LATENT_DIR, get_latent_pkl, get_latent_bolt
 
-os.makedirs(LATENT_DIR, exist_ok=True)
 
 
 def main():
@@ -24,6 +23,7 @@ def main():
     parser.add_argument('--seed', dest='seed', default=123, type=int)
     parser.add_argument('--mid_buffer', dest='mid_buffer', default=int(2e6), type=int)
     parser.add_argument('--indiv', dest='indiv', default='indiv.txt', type=str)
+    parser.add_argument('--wdir', dest='wdir', default='.', type=str)
 
     args = parser.parse_args()
     chromos = range(1, 23)
@@ -44,6 +44,7 @@ def main():
             exp_var=args.exp_var,
             mid_buffer=args.mid_buffer,
             seed=args.seed,
+            wdir=args.wdir,
             )
 
 
@@ -117,6 +118,7 @@ def simulate_full_data(
         exp_var=0.5,
         mid_buffer=2e6,
         seed=123,
+        wdir='.',
         ):
     '''create simulated phenotype
 
@@ -131,6 +133,9 @@ def simulate_full_data(
     mid_buffer (int): how much space to keep before and after midpoint of chromosomes to effect/null snps
     seed (int or None): random seed
     '''
+    latent_dir = join(wdir, LATENT_DIR)
+    os.makedirs(latent_dir, exist_ok=True)
+
     Gs, effs, nulls, rsids = [], [], [], []
     ind = 0
     print('loading genotype data...')
@@ -157,8 +162,8 @@ def simulate_full_data(
             seed=seed,
             )
 
-    s_pkl = join(LATENT_DIR, get_latent_pkl(exp_var, n_causal, seed))
-    s_bolt = join(LATENT_DIR, get_latent_bolt(exp_var, n_causal, seed))
+    s_pkl = join(latent_dir, get_latent_pkl(exp_var, n_causal, seed))
+    s_bolt = join(latent_dir, get_latent_bolt(exp_var, n_causal, seed))
     pickle.dump([pheno, eff, null, causal, W, rsids], open(s_pkl, 'wb'))
     pheno['FID'] = pheno['IID'] = pheno.index
     pheno = pheno[['FID', 'IID']+list(range(512))]

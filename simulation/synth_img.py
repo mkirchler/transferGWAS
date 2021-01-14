@@ -32,6 +32,7 @@ def main():
     parser.add_argument('--diff_noise', dest='diff_noise', action='store_true')
     parser.add_argument('--mult_scale', dest='mult_scale', default=1., type=float)
     parser.add_argument('--models_dir', default='../models', type=str)
+    parser.add_argument('--wdir', default='.', type=str)
 
     args = parser.parse_args()
 
@@ -45,6 +46,7 @@ def main():
             mult_scale=args.mult_scale,
             subset=None,
             seed=args.seed,
+            wdir=args.wdir,
             )
 
 
@@ -60,6 +62,7 @@ def synthesize_gwas_data(
         mult_scale=1.,
         subset=None,
         seed=123,
+        wdir='.',
         ):
     '''synthesize images from latent codes with StyleGAN2
 
@@ -77,7 +80,7 @@ def synthesize_gwas_data(
     subset (None or int): only create subset of images, for debugging
     seed (int): random seed
     '''
-    pth = join(LATENT_DIR, get_latent_bolt(exp_var, n_causal, seed))
+    pth = join(wdir, LATENT_DIR, get_latent_bolt(exp_var, n_causal, seed))
     latent = pd.read_csv(pth, sep=' ', index_col=1).drop('FID', 1)
     if subset is not None:
         latent = latent.sample(subset, random_state=123)
@@ -91,7 +94,7 @@ def synthesize_gwas_data(
     if same_noise:
         N = image_noise(1, img_size)
 
-    out_img_dir = get_img_dir(name, exp_var, n_causal, mult_scale, seed)
+    out_img_dir = join(wdir, get_img_dir(name, exp_var, n_causal, mult_scale, seed))
     os.makedirs(out_img_dir, exist_ok=True)
 
     for i, lat in tqdm(latent.iterrows(), total=len(latent)):

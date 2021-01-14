@@ -167,7 +167,7 @@ def main():
                 qcovars=qcovars,
                 method=in_transform,
                 )
-        tmp_dir = 'tmp'
+        tmp_dir = join(out_dir, 'tmp')
         os.makedirs(tmp_dir, exist_ok=True)
         fn = join(tmp_dir, '.'.join(configs['phenoFile'].split('/')[-1].split('.')[:-1]) + f'_INT_{in_transform}_{uuid.uuid4()}.txt')
         dfa.to_csv(fn, sep=' ', index=False)
