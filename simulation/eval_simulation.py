@@ -21,6 +21,7 @@ def eval_simulation(
         seeds=[123],
         pcs=range(10),
         thres=None,
+        wdir='.',
         ):
     results = []
     for exp_var in exp_vars:
@@ -29,7 +30,7 @@ def eval_simulation(
             t1ers = []
             t1es = []
             for seed in tqdm(seeds):
-                power, t1er, t1e, _ = eval_single(
+                power, t1er, t1e, _, _ = eval_single(
                         gan_name=gan_name,
                         exp_var=exp_var,
                         n_causal=n_causal,
@@ -43,6 +44,7 @@ def eval_simulation(
                         seed=seed,
                         pcs=pcs,
                         thres=thres,
+                        wdir=wdir,
                         )
                 powers.append(power)
                 t1ers.append(t1er)
@@ -85,8 +87,10 @@ def eval_single(
         seed=123,
         pcs=range(10),
         thres=None,
+        wdir='.',
         ):
-    latent_fn = join(LATENT_DIR, get_latent_pkl(exp_var, n_causal, seed))
+    latent_fn = join(wdir, LATENT_DIR, get_latent_pkl(exp_var, n_causal, seed))
+    print(latent_fn)
     P, eff, null, causal, W, R = pickle.load(open(latent_fn, 'rb'))
     if isinstance(R, list):
         R = np.concatenate(R)
@@ -94,7 +98,7 @@ def eval_single(
     nullr = R[null]
     causalr = R[causal]
 
-    fn = join(OUT_DIR, get_out(
+    fn = join(wdir, OUT_DIR, get_out(
             gan_name,
             exp_var,
             n_causal,
@@ -115,8 +119,12 @@ def eval_single(
             bolt_out.P_BOLT_LMM_INF = bolt_out.P_BOLT_LMM_INF.astype(float)
             dfs.append(bolt_out)
         except:
-            dfs.append(dfs[0])
+            bolt_out_dummy = dfs[0].copy()
+            bolt_out_dummy.P_BOLT_LMM_INF = 1.
+            dfs.append(bolt_out_dummy)
     df = dfs[0]
+    for pc in pcs:
+        df[f'P_BOLT_PC_{pc}'] = dfs[pc].P_BOLT_LMM_INF
     df.index = df.SNP
     df['ind'] = np.arange(len(df))
     null = np.intersect1d(df.SNP, nullr)
@@ -126,14 +134,32 @@ def eval_single(
         thres = 0.05 / len(df)
 
     pvs = np.array([d.P_BOLT_LMM_INF.values for d in dfs])
+    df['BONFERRONI_MIN'] = bonferroni_min(pvs.T)
 
-    df['bonferroni_min'] = bonferroni_min(pvs.T)
+    power = (df.loc[causal].BONFERRONI_MIN<thres).mean()
+    t1er = (df.loc[null].BONFERRONI_MIN<thres).mean()
+    t1e = (df.loc[null].BONFERRONI_MIN<thres).sum()
 
-    power = (df.loc[causal].bonferroni_min<thres).mean()
-    t1er = (df.loc[null].bonferroni_min<thres).mean()
-    t1e = (df.loc[null].bonferroni_min<thres).sum()
+    columns = ['SNP', 'CHR', 'BP', 'GENPOS', 'ALLELE1', 'ALLELE0', 'A1FREQ', 'F_MISS', 'BONFERRONI_MIN'] + [f'P_BOLT_PC_{pc}' for pc in pcs]
+    df = df[columns]
+    fn = join(wdir,
+            OUT_DIR,
+            'aggregate_' + get_out(
+            gan_name,
+            exp_var,
+            n_causal,
+            mult_scale,
+            model.split('.')[0],
+            layer,
+            spatial,
+            size,
+            tfms,
+            seed,
+            sample_size,
+        ) % '')
+    df.to_csv(fn, index=False)
 
-    return power, t1er, t1e, (dfs, null, causal)
+    return power, t1er, t1e, (dfs, null, causal), df
 
 def bonferroni_min(pvs):
     return (pvs.shape[1] * pvs.min(1)).clip(max=1.)

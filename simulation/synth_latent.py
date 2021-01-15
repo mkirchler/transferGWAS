@@ -170,6 +170,10 @@ def simulate_full_data(
     pheno.columns = list(pheno.columns[:2]) + ['pheno_%d'%d for d in range(512)]
     pheno.to_csv(s_bolt, sep=' ', index=False)
 
+    s_causal = join(wdir, 'causal_variants.csv')
+    causal_df = pd.DataFrame(np.concatenate(rsids)[causal])
+    causal_df.to_csv(s_causal, index=False, header=False)
+
 
 def simulate_pheno(
         G,

@@ -203,7 +203,6 @@ def simulation_stage_4(
         mult_scale=2.0,
         gan_name='stylegan2_healthy',
         tfms='tta',
-        n_pcs=50,
         model='resnet50',
         spatial='mean',
         size=448,
@@ -313,7 +312,8 @@ def simulation_stage_5(
         mult_scale=2.0,
         gan_name='stylegan2_healthy',
         tfms='tta',
-        n_pcs=10,
+        first_pc=0,
+        last_pc=9,
         model='resnet50',
         spatial='mean',
         size=448,
@@ -348,8 +348,9 @@ def simulation_stage_5(
             spatial=spatial,
             sample_sizes=sample_sizes,
             seeds=seeds,
-            pcs=range(n_pcs),
+            pcs=range(first_pc, last_pc+1),
             thres=5e-8,
+            wdir=wdir,
             )
         df.to_csv(fn+'tresh5e-8.csv', index=False)
 
