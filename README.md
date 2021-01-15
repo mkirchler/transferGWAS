@@ -2,6 +2,8 @@
 
 transferGWAS is a method for performing genome-wide association studies on whole images. This repository provides code to run your own transferGWAS on UK Biobank or your own data. transferGWAS has 3 steps: 1. pretraining, 2. feature condensation, and 3. LMM association analysis. Since the three steps require different compute infrastructure (GPU vs CPU server) and different parts can take longer time (e.g. pretraining can take a few days on a GPU), the parts are kept separate. 
 
+* **`quickstart:`** helps you create dummy genetic data on which to run a simulation with transferGWAS.
+
 * **`pretraining`:** provides code for training your own models on retinal fundus scans. This is mostly for reproducibility purposes - we provide our trained models in `models`, and if you want to train on your own data you will probably want to adapt to that data.
 
 * **`feature_condensation`:** this is a short script to go from trained model to low-dimensional condensed features. If you want to run on your own data, you will maybe need to write a few lines of `pytorch` code to properly read in your data into a `Dataset` (there's no one-size-fits-all here, unfortunately).

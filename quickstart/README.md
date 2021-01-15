@@ -24,11 +24,24 @@ This command will create a directory `runs/run_{RUN_ID}/` (with some random `RUN
 
 Now you can run a simulation experiment on this dummy data (with synthetically generated retina scans using a StyleGAN2) using:
 ```bash
-python ../simulation/run_simulation.py runs/run_{RUN_ID}/config.toml --stages 1 2 3 4 --verbose
+python ../simulation/run_simulation.py runs/run_{RUN_ID}/config.toml --stages 1 2 3 4 5 --verbose
 ```
 where you have to insert your `RUN_ID` from the previous step.
 Final results and intermediate steps are all saved in `runs/run_{RUN_ID}/`.
 This command will run all steps of the simulation study as detailed in `../simulation_study/README.md`. Note that you will need access to a CUDA-enabled GPU for this to work!
+
+The final association results will be saved in `runs/run_{RUN_ID}/results/aggregate_exp[...].txt` (with parameters instead of `[...]`) and the true causal SNPs are in `runs/run_{RUN_ID}/causal_variants.csv`. You can get a more complete picture in python:
+```python
+import pickle
+RUN_ID = TODO
+seed = 123
+n_causal = 100
+exp_var = 0.5
+latent_code, _, _, _, W, _ = pickle.load(open('runs/run_{RUN_ID}/latent/exp_var{exp_var}_nc{n_causal}_seed{seed}.pkl', 'rb'))
+```
+Here, `W` will hold the effet sizes per dimension for the causal SNPs (ordered as in the `causal_variants.csv` file), and latent code will be the true latent code fed into the GAN.
+
+With the default setting, an exemplar run recovered around ... of the 100 causal SNPs.
 
 
 Note that this is very far from a realistic simulation study, genetic data is modeled completely without LD and any other kinds of structure.
@@ -42,7 +55,8 @@ Generation of the synthetic genetic data grows linearly in sample size and numbe
 The simulation consists of several steps.
 1. Creation of latent representations from genetic data: <30 seconds
 2. Synthetic images from latent representation via StyleGAN2: <5 minutes (depends on GPU)
-3. Feature condensation using ResNet50: <10 minutes (depends on GPU)
-4. BOLT-LMM GWAS: 10 times  (depends on the number of threads chosen)
+3. Feature condensation using ResNet50: <15 minutes (depends on GPU)
+4. BOLT-LMM GWAS: 10 times ~1 minute (depends on the number of threads chosen)
+5. Aggregation: <30 seconds
 
 
