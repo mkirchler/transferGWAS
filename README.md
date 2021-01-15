@@ -19,21 +19,20 @@ transferGWAS is a method for performing genome-wide association studies on whole
 
 ## Getting started
 
-This repository requires bash and was written and tested on Ubuntu 18.04.4 LTS. However, all code should also work under Windows (might potentially need some adjustments for the very few small bash-scripts).
+This repository requires bash and was written and tested on Ubuntu 18.04.4 LTS.
 
 Start by cloning this repo:
 ```bash
 git clone https://github.com/mkirchler/transferGWAS.git
 ```
 
-You can download pretrained models via
+You can download pretrained models and BOLT-LMM via
 ```bash
 ./download_models.sh
 ```
-This includes the CNN pretrained on the EyePACS dataset to predict Diabetic Retinopathy and the StyleGAN2 on retinal fundus images for the simulation study (the ImageNet-pretrained network is included in the pytorch library).
+This includes the CNN pretrained on the EyePACS dataset to predict Diabetic Retinopathy and the StyleGAN2 on retinal fundus images for the simulation study (the ImageNet-pretrained network is included in the pytorch library), as well as BOLT-LMM version 2.3.4.
 
 ### Python
-
 
 All parts require python 3.6+, and all deep learning parts are built in `pytorch`. We recommend using some up-to-date version of anaconda and then creating a new environment from the `environment.yml`:
 ```bash
@@ -48,6 +47,7 @@ conda activate transfer_gwas_cpu
 ```
 Note that this won't install any of the `pytorch` libraries - you can only use it for the `run_bolt` and for stages 1 and 4 in the `simulation`.
 
+Installation of requirements should not take longer than a few minutes (depending on internet connection).
 
 ### Reproducing paper results
 
