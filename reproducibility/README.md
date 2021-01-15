@@ -7,10 +7,10 @@ We provide the list of individuals we used in our analysis (`indiv.txt`), as wel
 ## Preprocessing data
 
 ### Genetic data
-You can preprocess all genetic data with `../lmm/preprocess_ma.sh` and `../lmm/preprocess_img.sh` (insert `INDIV=../reproducibility/indiv.txt`, and set the input and output files correspondingly)
+You can preprocess all genetic data with `../lmm/preprocessing_ma.sh` and `../lmm/preprocessing_imp.sh` (insert `INDIV=../reproducibility/indiv.txt`, and set the input and output files correspondingly)
 
 ### Covariate data
-You can preprocess all covariate data with `../lmm/preprocess_cov.py`, just pass your covariate file, `indiv.txt` and keep the other parameters as default.
+You can preprocess all covariate data with `../lmm/preprocessing_cov.py`, just pass your covariate file, `indiv.txt` and keep the other parameters as default.
 
 ### Image data
 Use 
