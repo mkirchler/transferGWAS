@@ -41,10 +41,10 @@ latent_code, _, _, _, W, _ = pickle.load(open('runs/run_{RUN_ID}/latent/exp_var{
 ```
 Here, `W` will hold the effet sizes per dimension for the causal SNPs (ordered as in the `causal_variants.csv` file), and latent code will be the true latent code fed into the GAN.
 
-With the default setting, an exemplar run recovered around ... of the 100 causal SNPs.
+With the default setting, an exemplar run recovered 29 of the 100 causal SNPs at `alpha = 5e-8`, and 37 are significant at `alpha = 5e-7` (Bonferroni threshold for 100,000 SNPs and uncorrected significance threshold 0.05).
 
 
-Note that this is very far from a realistic simulation study, genetic data is modeled completely without LD and any other kinds of structure.
+Note that this is very far from a realistic simulation study; genetic data is modeled completely without LD and any other kinds of structure.
 For a more realistic simulation, you can provide real genetic data as explained in `../simulation/README.md` in more detail.
 
 
